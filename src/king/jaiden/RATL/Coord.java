@@ -1,7 +1,7 @@
 package king.jaiden.RATL;
 
 public class Coord {
-	private double x,y,z;
+	private double x,y,z,w,h;
 
 	/**
 	 * Creates a new Coord Object
