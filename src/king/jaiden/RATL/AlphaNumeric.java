@@ -10,12 +10,13 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 public class AlphaNumeric {
-	private Texture tex;
+	private Texture tex, tex2;
 	private float charSpace = 0.125f;  // This is the fraction of the texture that represents one character.
 	
 	// Initialize the instance variables and such
 	public AlphaNumeric() throws FileNotFoundException, IOException{
 		tex = TextureLoader.getTexture("PNG", new FileInputStream(new File("res/images/alpha.png")));
+		tex2 = TextureLoader.getTexture("PNG", new FileInputStream(new File("res/images/alpha2.png")));
 		/*
 		 * A note about the alpha.png image:
 		 * there are 8 rows and columns, meaning the space for one character
@@ -33,12 +34,19 @@ public class AlphaNumeric {
 	 * @param height The height of the character
 	 */
 	public void write(char ch, double posX, double posY, double posZ, double width, double height){
+		boolean upperCase = false;		
+		if(!Character.isLetter(ch)||Character.isUpperCase(ch))
+				upperCase = true;
 		ch = Character.toLowerCase(ch);
 		float texCoordX = getTexCoordX(ch);
 		float texCoordY = getTexCoordY(ch);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
+		if(upperCase){
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
+		}else{
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex2.getTextureID());
+		}
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(texCoordX, texCoordY); 
 			GL11.glVertex2d(posX,posY+height);
