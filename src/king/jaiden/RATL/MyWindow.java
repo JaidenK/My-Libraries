@@ -30,19 +30,9 @@ public abstract class MyWindow {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
-		// Setup the Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		GLU.gluPerspective(100, WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 10000);
-		glMatrixMode(GL_MODELVIEW);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glEnable(GL_CULL_FACE);
-
+		
+		setup3DMatrix();
+		enableTests();
 		init();
 		
 		while (!Display.isCloseRequested()){
@@ -62,5 +52,21 @@ public abstract class MyWindow {
 	}
 	public void draw(){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	public void setup3DMatrix(){
+		glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
+		// Setup the Matrix
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		GLU.gluPerspective(100, WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 10000);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	public void enableTests(){
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		glEnable(GL_CULL_FACE);
 	}
 }
