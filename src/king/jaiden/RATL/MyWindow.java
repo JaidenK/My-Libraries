@@ -18,12 +18,27 @@ public abstract class MyWindow {
 	 * @param fov Vertical(?) field of view
 	 * @param title The title of the window
 	 */
-	public MyWindow(int w,int h, int fov, String title){
+	public MyWindow(int w,int h, int fov, String title, boolean fullscreen, boolean matrixMode){
 		WINDOW_WIDTH = w;
 		WINDOW_HEIGHT = h;
 		// Setup the Display
 		try {
-			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
+			DisplayMode displayMode = null;
+	        DisplayMode[] modes = Display.getAvailableDisplayModes();
+	        for (int i = 0; i < modes.length; i++)
+	        {
+	        	if (modes[i].getWidth() == w
+	            && modes[i].getHeight() == h
+	            && modes[i].isFullscreenCapable())
+	        		{
+	            	 	displayMode = modes[i];
+	        		}
+	        }
+	        if(!fullscreen){
+	        	displayMode = new DisplayMode(w,h);
+	        }
+			Display.setDisplayMode(displayMode);
+			Display.setFullscreen(fullscreen);
 			Display.create();
 			Display.setTitle(title);
 		} catch (LWJGLException e) {
@@ -31,7 +46,11 @@ public abstract class MyWindow {
 			System.exit(1);
 		}
 		
-		setup3DMatrix();
+		if(matrixMode){
+			setup3DMatrix();
+		}else{
+			setup2DMatrix(w,h);
+		}
 		enableTests();
 		init();
 		
@@ -59,6 +78,13 @@ public abstract class MyWindow {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		GLU.gluPerspective(100, WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 10000);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	public void setup2DMatrix(int w, int h){
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, w, 0, h, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
